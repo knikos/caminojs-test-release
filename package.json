@@ -1,7 +1,7 @@
 {
   "name": "@c4tplatform/camino",
   "version": "0.0.2",
-  "description": "Avalanche Platform JS Library",
+  "description": "Camino Platform JS Library",
   "main": "dist/index.js",
   "scripts": {
     "build-linux": "rm -rf dist/ && npx tsc -b && cp -r typings/src ./dist",
@@ -26,9 +26,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ava-labs/avalanchejs.git"
+    "url": "git+https://github.com/chain4travel/caminojs.git"
   },
   "keywords": [
+    "Camino",
     "Avalanche",
     "blockchain",
     "defi"
@@ -41,9 +42,9 @@
   ],
   "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/ava-labs/avalanchejs/issues"
+    "url": "https://github.com/chain4travel/caminojs/issues"
   },
-  "homepage": "https://github.com/ava-labs/avalanchejs#readme",
+  "homepage": "https://github.com/chain4travel/caminojs#readme",
   "devDependencies": {
     "@types/bech32": "1.1.4",
     "@types/bn.js": "5.1.0",
