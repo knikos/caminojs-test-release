@@ -367,9 +367,9 @@ export default class BinTools {
       humanReadablePart !== "avax" &&
       humanReadablePart !== "fuji" &&
       humanReadablePart != "local" &&
+      humanReadablePart != "kopernikus" &&
       humanReadablePart != "columbus" &&
       humanReadablePart != "camino" &&
-      humanReadablePart != "kopernikus" &&
       humanReadablePart != "custom" &&
       humanReadablePart != hrp
     ) {
