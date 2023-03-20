@@ -5,12 +5,12 @@ import {
   UTXOSet,
   UnsignedTx,
   Tx,
-  PlatformVMConstants,
+  PlatformVMConstants
 } from "caminojs/apis/platformvm"
 import {
   MultisigKeyChain,
   MultisigKeyPair,
-  OutputOwners,
+  OutputOwners
 } from "caminojs/common"
 
 import {
@@ -61,9 +61,7 @@ const InitAvalanche = async () => {
 
 const msigAlias = msigAliasArray[0] // use msig alias with multiple addresses
 
-
 const sendRegisterNodeTx = async (): Promise<any> => {
-
   // load msig config
   const msigAliasBuffer = pchain.parseAddress(msigAlias)
   const owner = await pchain.getMultisigAlias(msigAlias)
@@ -85,12 +83,9 @@ const sendRegisterNodeTx = async (): Promise<any> => {
     owner.threshold
   )
 
-
   // Create the hash from the tx
   const txbuff = unsignedTx.toBuffer()
-  const msg: Buffer = Buffer.from(
-    createHash("sha256").update(txbuff).digest()
-  )
+  const msg: Buffer = Buffer.from(createHash("sha256").update(txbuff).digest())
 
   // create MSKeychein to create proper signidx
   const msKeyChain = new MultisigKeyChain(
@@ -126,11 +121,9 @@ const sendRegisterNodeTx = async (): Promise<any> => {
   const tx: Tx = unsignedTx.sign(msKeyChain)
   const txid: string = await pchain.issueTx(tx)
   console.log(`Success! TXID: ${txid}`)
-
 }
 
 const sendAddValidatorTx = async (): Promise<any> => {
-
   // load msig config
   const msigAliasBuffer = pchain.parseAddress(msigAlias)
   const owner = await pchain.getMultisigAlias(msigAlias)
@@ -161,12 +154,9 @@ const sendAddValidatorTx = async (): Promise<any> => {
     owner.threshold
   )
 
-
   // Create the hash from the tx
   const txbuff = unsignedTx.toBuffer()
-  const msg: Buffer = Buffer.from(
-    createHash("sha256").update(txbuff).digest()
-  )
+  const msg: Buffer = Buffer.from(createHash("sha256").update(txbuff).digest())
 
   // create MSKeychein to create proper signidx
   const msKeyChain = new MultisigKeyChain(

@@ -5,12 +5,12 @@ import {
   UTXOSet,
   UnsignedTx,
   Tx,
-  PlatformVMConstants,
+  PlatformVMConstants
 } from "caminojs/apis/platformvm"
 import {
   MultisigKeyChain,
   MultisigKeyPair,
-  OutputOwners,
+  OutputOwners
 } from "caminojs/common"
 
 import {
@@ -61,18 +61,15 @@ const InitAvalanche = async () => {
 
 const msigAlias = msigAliasArray[0] // use msig alias with multiple addresses
 
-
 const sendRegisterNodeTx = async (): Promise<any> => {
-
   // Those are not serialized back and forth because
   // its so simple and has no methods
-  let signatures: [string, string][] = [];
+  let signatures: [string, string][] = []
 
   // these are serialized to test if their methods are
   // working properly
-  let unsignedTxHex: string = "";
-  let outputOwnersHex: string = "";
-
+  let unsignedTxHex: string = ""
+  let outputOwnersHex: string = ""
 
   // simulate tx creation
   {
@@ -96,16 +93,19 @@ const sendRegisterNodeTx = async (): Promise<any> => {
 
     // turn it into a hex blob
     unsignedTxHex = unsignedTx.toBuffer().toString("hex")
-    outputOwnersHex = unsignedTx.getTransaction().getOutputOwners().reduce<string>((acc, oo) => {
-      if (acc.length != 0) acc += "," // use whatever you like here :3
-      return acc + oo.toBuffer().toString("hex")
-    }, "")
+    outputOwnersHex = unsignedTx
+      .getTransaction()
+      .getOutputOwners()
+      .reduce<string>((acc, oo) => {
+        if (acc.length != 0) acc += "," // use whatever you like here :3
+        return acc + oo.toBuffer().toString("hex")
+      }, "")
   }
 
   // simulate signing
   {
     // deserialize
-    let unsignedTx = new UnsignedTx();
+    let unsignedTx = new UnsignedTx()
     unsignedTx.fromBuffer(Buffer.from(unsignedTxHex, "hex"))
 
     // Create the hash from the tx
@@ -120,11 +120,9 @@ const sendRegisterNodeTx = async (): Promise<any> => {
       // The signature
       const signature = keyPair.sign(msg)
       // save the signature
-      signatures.push([keyPair.getAddressString(), signature.toString('hex')])
+      signatures.push([keyPair.getAddressString(), signature.toString("hex")])
     }
-
   }
-
 
   // simulate reconstruciton
   {
@@ -133,12 +131,12 @@ const sendRegisterNodeTx = async (): Promise<any> => {
     const owner = await pchain.getMultisigAlias(msigAlias)
 
     // deserialize
-    let unsignedTx = new UnsignedTx();
+    let unsignedTx = new UnsignedTx()
     unsignedTx.fromBuffer(Buffer.from(unsignedTxHex, "hex"))
 
     // parse and set output owners - are requried for msig resolving
-    let parsedOwners: OutputOwners[] = outputOwnersHex.split(",").map(oo => {
-      let res = new OutputOwners();
+    let parsedOwners: OutputOwners[] = outputOwnersHex.split(",").map((oo) => {
+      let res = new OutputOwners()
       res.fromBuffer(Buffer.from(oo, "hex"))
       return res
     })
@@ -185,16 +183,14 @@ const sendRegisterNodeTx = async (): Promise<any> => {
 }
 
 const sendAddValidatorTx = async (): Promise<any> => {
-
   // Those are not serialized back and forth because
   // its so simple and has no methods
-  let signatures: [string, string][] = [];
+  let signatures: [string, string][] = []
 
   // these are serialized to test if their methods are
   // working properly
-  let unsignedTxHex: string = "";
-  let outputOwnersHex: string = "";
-
+  let unsignedTxHex: string = ""
+  let outputOwnersHex: string = ""
 
   // simulate tx creation
   {
@@ -227,16 +223,19 @@ const sendAddValidatorTx = async (): Promise<any> => {
 
     // turn it into a hex blob
     unsignedTxHex = unsignedTx.toBuffer().toString("hex")
-    outputOwnersHex = unsignedTx.getTransaction().getOutputOwners().reduce<string>((acc, oo) => {
-      if (acc.length != 0) acc += "," // use whatever you like here :3
-      return acc + oo.toBuffer().toString("hex")
-    }, "")
+    outputOwnersHex = unsignedTx
+      .getTransaction()
+      .getOutputOwners()
+      .reduce<string>((acc, oo) => {
+        if (acc.length != 0) acc += "," // use whatever you like here :3
+        return acc + oo.toBuffer().toString("hex")
+      }, "")
   }
 
   // simulate signing
   {
     // deserialize
-    let unsignedTx = new UnsignedTx();
+    let unsignedTx = new UnsignedTx()
     unsignedTx.fromBuffer(Buffer.from(unsignedTxHex, "hex"))
 
     // Create the hash from the tx
@@ -251,11 +250,9 @@ const sendAddValidatorTx = async (): Promise<any> => {
       // The signature
       const signature = keyPair.sign(msg)
       // save the signature
-      signatures.push([keyPair.getAddressString(), signature.toString('hex')])
+      signatures.push([keyPair.getAddressString(), signature.toString("hex")])
     }
-
   }
-
 
   // simulate reconstruciton
   {
@@ -264,12 +261,12 @@ const sendAddValidatorTx = async (): Promise<any> => {
     const owner = await pchain.getMultisigAlias(msigAlias)
 
     // deserialize
-    let unsignedTx = new UnsignedTx();
+    let unsignedTx = new UnsignedTx()
     unsignedTx.fromBuffer(Buffer.from(unsignedTxHex, "hex"))
 
     // parse and set output owners - are requried for msig resolving
-    let parsedOwners: OutputOwners[] = outputOwnersHex.split(",").map(oo => {
-      let res = new OutputOwners();
+    let parsedOwners: OutputOwners[] = outputOwnersHex.split(",").map((oo) => {
+      let res = new OutputOwners()
       res.fromBuffer(Buffer.from(oo, "hex"))
       return res
     })
