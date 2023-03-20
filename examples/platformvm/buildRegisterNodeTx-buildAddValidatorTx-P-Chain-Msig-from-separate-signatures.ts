@@ -93,92 +93,86 @@ const sendRegisterNodeTx = async (): Promise<any> => {
 
     // turn it into a hex blob
     unsignedTxHex = unsignedTx.toBuffer().toString("hex")
-    outputOwnersHex = unsignedTx
-      .getTransaction()
-      .getOutputOwners()
-      .reduce<string>((acc, oo) => {
-        if (acc.length != 0) acc += "," // use whatever you like here :3
-        return acc + oo.toBuffer().toString("hex")
-      }, "")
-  }
+    outputOwnersHex = OutputOwners.toArray(
+      unsignedTx.getTransaction().getOutputOwners()
+    ).toString("hex")
 
-  // simulate signing
-  {
-    // deserialize
-    let unsignedTx = new UnsignedTx()
-    unsignedTx.fromBuffer(Buffer.from(unsignedTxHex, "hex"))
+    // simulate signing
+    {
+      // deserialize
+      let unsignedTx = new UnsignedTx()
+      unsignedTx.fromBuffer(Buffer.from(unsignedTxHex, "hex"))
 
-    // Create the hash from the tx
-    const txbuff = unsignedTx.toBuffer()
-    const msg: Buffer = Buffer.from(
-      createHash("sha256").update(txbuff).digest()
-    )
+      // Create the hash from the tx
+      const txbuff = unsignedTx.toBuffer()
+      const msg: Buffer = Buffer.from(
+        createHash("sha256").update(txbuff).digest()
+      )
 
-    for (let address of pAddresses) {
-      // We need the keychain for signing
-      const keyPair = pKeychain.getKey(address)
-      // The signature
-      const signature = keyPair.sign(msg)
-      // save the signature
-      signatures.push([keyPair.getAddressString(), signature.toString("hex")])
-    }
-  }
-
-  // simulate reconstruciton
-  {
-    // load msig configuration from node
-    const msigAliasBuffer = pchain.parseAddress(msigAlias)
-    const owner = await pchain.getMultisigAlias(msigAlias)
-
-    // deserialize
-    let unsignedTx = new UnsignedTx()
-    unsignedTx.fromBuffer(Buffer.from(unsignedTxHex, "hex"))
-
-    // parse and set output owners - are requried for msig resolving
-    let parsedOwners: OutputOwners[] = outputOwnersHex.split(",").map((oo) => {
-      let res = new OutputOwners()
-      res.fromBuffer(Buffer.from(oo, "hex"))
-      return res
-    })
-    unsignedTx.getTransaction().setOutputOwners(parsedOwners)
-
-    const txbuff = unsignedTx.toBuffer()
-    const msg: Buffer = Buffer.from(
-      createHash("sha256").update(txbuff).digest()
-    )
-
-    // create MSKeychein to create proper signidx
-    const msKeyChain = new MultisigKeyChain(
-      avalanche.getHRP(),
-      PChainAlias,
-      msg,
-      PlatformVMConstants.SECPMULTISIGCREDENTIAL,
-      unsignedTx.getTransaction().getOutputOwners(),
-      new Map([
-        [
-          msigAliasBuffer.toString("hex"),
-          new OutputOwners(
-            owner.addresses.map((a) => bintools.parseAddress(a, "P")),
-            new BN(owner.locktime),
-            owner.threshold
-          )
-        ]
-      ])
-    )
-
-    // load the signatures from the store/map/signavault
-    for (let [addressString, hexSignature] of signatures) {
-      let address = pchain.parseAddress(addressString)
-      let signature = Buffer.from(hexSignature, "hex")
-      msKeyChain.addKey(new MultisigKeyPair(msKeyChain, address, signature))
+      for (let address of pAddresses) {
+        // We need the keychain for signing
+        const keyPair = pKeychain.getKey(address)
+        // The signature
+        const signature = keyPair.sign(msg)
+        // save the signature
+        signatures.push([keyPair.getAddressString(), signature.toString("hex")])
+      }
     }
 
-    msKeyChain.buildSignatureIndices()
+    // simulate reconstruciton
+    {
+      // load msig configuration from node
+      const msigAliasBuffer = pchain.parseAddress(msigAlias)
+      const owner = await pchain.getMultisigAlias(msigAlias)
 
-    // Apply the signatures and send the tx
-    const tx: Tx = unsignedTx.sign(msKeyChain)
-    const txid: string = await pchain.issueTx(tx)
-    console.log(`Success! TXID: ${txid}`)
+      // deserialize
+      let unsignedTx = new UnsignedTx()
+      unsignedTx.fromBuffer(Buffer.from(unsignedTxHex, "hex"))
+
+      // parse and set output owners - are requried for msig resolving
+      let parsedOwners: OutputOwners[] = OutputOwners.fromArray(
+        Buffer.from(outputOwnersHex, "hex")
+      )
+      unsignedTx.getTransaction().setOutputOwners(parsedOwners)
+
+      const txbuff = unsignedTx.toBuffer()
+      const msg: Buffer = Buffer.from(
+        createHash("sha256").update(txbuff).digest()
+      )
+
+      // create MSKeychein to create proper signidx
+      const msKeyChain = new MultisigKeyChain(
+        avalanche.getHRP(),
+        PChainAlias,
+        msg,
+        PlatformVMConstants.SECPMULTISIGCREDENTIAL,
+        unsignedTx.getTransaction().getOutputOwners(),
+        new Map([
+          [
+            msigAliasBuffer.toString("hex"),
+            new OutputOwners(
+              owner.addresses.map((a) => bintools.parseAddress(a, "P")),
+              new BN(owner.locktime),
+              owner.threshold
+            )
+          ]
+        ])
+      )
+
+      // load the signatures from the store/map/signavault
+      for (let [addressString, hexSignature] of signatures) {
+        let address = pchain.parseAddress(addressString)
+        let signature = Buffer.from(hexSignature, "hex")
+        msKeyChain.addKey(new MultisigKeyPair(msKeyChain, address, signature))
+      }
+
+      msKeyChain.buildSignatureIndices()
+
+      // Apply the signatures and send the tx
+      const tx: Tx = unsignedTx.sign(msKeyChain)
+      const txid: string = await pchain.issueTx(tx)
+      console.log(`Success! TXID: ${txid}`)
+    }
   }
 }
 
@@ -223,13 +217,9 @@ const sendAddValidatorTx = async (): Promise<any> => {
 
     // turn it into a hex blob
     unsignedTxHex = unsignedTx.toBuffer().toString("hex")
-    outputOwnersHex = unsignedTx
-      .getTransaction()
-      .getOutputOwners()
-      .reduce<string>((acc, oo) => {
-        if (acc.length != 0) acc += "," // use whatever you like here :3
-        return acc + oo.toBuffer().toString("hex")
-      }, "")
+    outputOwnersHex = OutputOwners.toArray(
+      unsignedTx.getTransaction().getOutputOwners()
+    ).toString("hex")
   }
 
   // simulate signing
@@ -265,11 +255,9 @@ const sendAddValidatorTx = async (): Promise<any> => {
     unsignedTx.fromBuffer(Buffer.from(unsignedTxHex, "hex"))
 
     // parse and set output owners - are requried for msig resolving
-    let parsedOwners: OutputOwners[] = outputOwnersHex.split(",").map((oo) => {
-      let res = new OutputOwners()
-      res.fromBuffer(Buffer.from(oo, "hex"))
-      return res
-    })
+    let parsedOwners: OutputOwners[] = OutputOwners.fromArray(
+      Buffer.from(outputOwnersHex, "hex")
+    )
     unsignedTx.getTransaction().setOutputOwners(parsedOwners)
 
     const txbuff = unsignedTx.toBuffer()
