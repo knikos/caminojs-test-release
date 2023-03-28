@@ -3,4 +3,7 @@ export interface ExamplesConfig {
   port: number
   protocol: string
   networkID: number
+  signavaultHost: string
+  signavaultPort: number
+  signavaultProtocol: string
 }
