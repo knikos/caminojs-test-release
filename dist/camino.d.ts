@@ -4,7 +4,7 @@
  */
 import { AxiosRequestConfig, AxiosRequestHeaders, Method } from "axios";
 import { APIBase, RequestResponseData } from "./common/apibase";
-import { Network } from "./utils/networks";
+import { Chain, Network } from "./utils/networks";
 /**
  * AvalancheCore is middleware for interacting with Avalanche node RPC APIs.
  *
@@ -49,6 +49,10 @@ export default class AvalancheCore {
      * Returns the network configuration.
      */
     getNetwork: () => Network;
+    /**
+     * Returns the network chains.
+     */
+    getChains: () => Chain[];
     /**
      * Returns the protocol such as "http", "https", "git", "ws", etc.
      */

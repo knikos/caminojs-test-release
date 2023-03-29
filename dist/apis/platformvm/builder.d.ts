@@ -285,7 +285,43 @@ export declare class Builder {
      *
      * @returns An unsigned DepositTx created from the passed in parameters.
      */
-    buildDepositTx: (networkID: number, blockchainID: Buffer, fromSigner: FromSigner, changeAddresses: Buffer[], depositOfferID: string | Buffer, depositDuration: number | Buffer, rewardsOwner: OutputOwners, fee?: BN, feeAssetID?: Buffer, memo?: Buffer, asOf?: BN, changeThreshold?: number) => Promise<UnsignedTx>;
+    buildDepositTx: (networkID: number, blockchainID: Buffer, fromSigner: FromSigner, changeAddresses: Buffer[], depositOfferID: string | Buffer, depositDuration: number | Buffer, rewardsOwner: OutputOwners, fee: BN, feeAssetID: Buffer, memo: Buffer, asOf: BN, amountToLock: BN, changeThreshold?: number) => Promise<UnsignedTx>;
+    /**
+     * Build an unsigned [[UnlockDepositTx]].
+     *
+     * @param networkID Networkid, [[DefaultNetworkID]]
+     * @param blockchainID Blockchainid, default undefined
+     * @param fromSigner @param fromSigner The addresses being used to send and verify the funds from the UTXOs {@link https://github.com/feross/buffer|Buffer}
+     * @param changeAddresses The addresses that can spend the change remaining from the spent UTXOs.
+     * @param fee Optional. The amount of fees to burn in its smallest denomination, represented as {@link https://github.com/indutny/bn.js/|BN}
+     * @param feeAssetID Optional. The assetID of the fees being burned
+     * @param memo Optional contains arbitrary bytes, up to 256 bytes
+     * @param asOf Optional. The timestamp to verify the transaction against as a {@link https://github.com/indutny/bn.js/|BN}
+     * @param changeThreshold Optional. The number of signatures required to spend the funds in the resultant change UTXO
+     *
+     * @returns An unsigned UnlockDepositTx created from the passed in parameters.
+     */
+    buildUnlockDepositTx: (networkID: number, blockchainID: Buffer, fromSigner: FromSigner, changeAddresses: Buffer[], fee?: BN, feeAssetID?: Buffer, memo?: Buffer, asOf?: BN, changeThreshold?: number) => Promise<UnsignedTx>;
+    /**
+     * Build an unsigned [[ClaimTx]].
+     *
+     * @param networkID NetworkID, [[DefaultNetworkID]]
+     * @param blockchainID BlockchainID, default undefined
+     * @param fromSigner @param fromSigner The addresses being used to send and verify the funds from the UTXOs {@link https://github.com/feross/buffer|Buffer}
+     * @param changeAddresses The addresses that can spend the change remaining from the spent UTXOs.
+     * @param fee Optional. The amount of fees to burn in its smallest denomination, represented as {@link https://github.com/indutny/bn.js/|BN}
+     * @param feeAssetID Optional. The assetID of the fees being burned
+     * @param memo Optional contains arbitrary bytes, up to 256 bytes
+     * @param asOf Optional. The timestamp to verify the transaction against as a {@link https://github.com/indutny/bn.js/|BN}
+     * @param changeThreshold Optional. The number of signatures required to spend the funds in the resultant change UTXO
+     * @param depositTxs The deposit transactions with which the claiblable rewards are associated
+     * @param claimableOwnerIDs The ownerIDs of the rewards to claim
+     * @param claimedAmounts The amounts of the rewards to claim
+     * @param claimTo The address to claimed rewards will be directed to
+     *
+     * @returns An unsigned ClaimTx created from the passed in parameters.
+     */
+    buildClaimTx: (networkID: number, blockchainID: Buffer, fromSigner: FromSigner, changeAddresses: Buffer[], fee: BN, feeAssetID: Buffer, memo: Buffer, asOf: BN, changeThreshold: number, depositTxs: string[] | Buffer[], claimableOwnerIDs: string[] | Buffer[], claimedAmounts: BN[], claimTo: OutputOwners, claimableSigners?: [number, Buffer][]) => Promise<UnsignedTx>;
     _feeCheck(fee: BN, feeAssetID: Buffer): boolean;
 }
 //# sourceMappingURL=builder.d.ts.map

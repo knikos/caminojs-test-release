@@ -257,7 +257,7 @@ export interface Owner {
     addresses: string[];
 }
 export interface MultisigAliasReply extends Owner {
-    Memo: string;
+    memo: string;
 }
 export interface SpendParams {
     from: string[] | string;

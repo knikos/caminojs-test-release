@@ -1,0 +1,15 @@
+"use strict";
+/**
+ * @packageDocumentation
+ * @module API-EVM-Camino-Constants
+ */
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.EVMCaminoConstants = void 0;
+class EVMCaminoConstants {
+}
+exports.EVMCaminoConstants = EVMCaminoConstants;
+EVMCaminoConstants.ADMINROLE = 1;
+EVMCaminoConstants.GASFEEROLE = 2;
+EVMCaminoConstants.KYCROLE = 4;
+EVMCaminoConstants.BLACKLISTROLE = 8;
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiY2FtaW5vX2NvbnN0YW50cy5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uL3NyYy9hcGlzL2V2bS9jYW1pbm9fY29uc3RhbnRzLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7QUFBQTs7O0dBR0c7OztBQUVILE1BQWEsa0JBQWtCOztBQUEvQixnREFRQztBQVBRLDRCQUFTLEdBQVcsQ0FBQyxDQUFBO0FBRXJCLDZCQUFVLEdBQVcsQ0FBQyxDQUFBO0FBRXRCLDBCQUFPLEdBQVcsQ0FBQyxDQUFBO0FBRW5CLGdDQUFhLEdBQVcsQ0FBQyxDQUFBIiwic291cmNlc0NvbnRlbnQiOlsiLyoqXG4gKiBAcGFja2FnZURvY3VtZW50YXRpb25cbiAqIEBtb2R1bGUgQVBJLUVWTS1DYW1pbm8tQ29uc3RhbnRzXG4gKi9cblxuZXhwb3J0IGNsYXNzIEVWTUNhbWlub0NvbnN0YW50cyB7XG4gIHN0YXRpYyBBRE1JTlJPTEU6IG51bWJlciA9IDFcblxuICBzdGF0aWMgR0FTRkVFUk9MRTogbnVtYmVyID0gMlxuXG4gIHN0YXRpYyBLWUNST0xFOiBudW1iZXIgPSA0XG5cbiAgc3RhdGljIEJMQUNLTElTVFJPTEU6IG51bWJlciA9IDhcbn1cbiJdfQ==

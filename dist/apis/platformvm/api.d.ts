@@ -238,7 +238,7 @@ export declare class PlatformVMAPI extends JRPCAPI {
      *
      * @returns Promise for a list containing deposit offers.
      */
-    getAllDepositOffers: (active: boolean) => Promise<DepositOffer[]>;
+    getAllDepositOffers: (active?: boolean) => Promise<DepositOffer[]>;
     /**
      * Returns deposits coressponding to requested txIDs.
      *
@@ -713,7 +713,38 @@ export declare class PlatformVMAPI extends JRPCAPI {
      *
      * @returns An unsigned transaction created from the passed in parameters.
      */
-    buildDepositTx: (utxoset: UTXOSet, fromAddresses: FromType, changeAddresses: string[], depositOfferID: string | Buffer, depositDuration: number | Buffer, rewardsOwner?: OutputOwners, memo?: PayloadBase | Buffer, asOf?: BN, changeThreshold?: number) => Promise<UnsignedTx>;
+    buildDepositTx: (utxoset: UTXOSet, fromAddresses: FromType, changeAddresses: string[], depositOfferID: string | Buffer, depositDuration: number | Buffer, rewardsOwner: OutputOwners, memo: PayloadBase | Buffer, asOf: BN, amountToLock: BN, changeThreshold?: number) => Promise<UnsignedTx>;
+    /**
+     * Build an unsigned [[UnlockDepositTx]].
+     *
+     * @param utxoset A set of UTXOs that the transaction is built on
+     * @param fromAddresses The addresses being used to send the funds from the UTXOs {@link https://github.com/feross/buffer|Buffer}
+     * @param changeAddresses The addresses that can spend the change remaining from the spent UTXOs.
+     * @param memo Optional contains arbitrary bytes, up to 256 bytes
+     * @param asOf Optional. The timestamp to verify the transaction against as a {@link https://github.com/indutny/bn.js/|BN}
+     * @param changeThreshold Optional. The number of signatures required to spend the funds in the resultant change UTXO
+     *
+     * @returns An unsigned transaction created from the passed in parameters.
+     */
+    buildUnlockDepositTx: (utxoset: UTXOSet, fromAddresses: string[], changeAddresses: string[], memo: PayloadBase | Buffer, asOf: BN, amountToLock: BN, changeThreshold?: number) => Promise<UnsignedTx>;
+    /**
+     * Build an unsigned [[ClaimTx]].
+     *
+     * @param utxoset A set of UTXOs that the transaction is built on
+     * @param fromAddresses The addresses being used to send the funds from the UTXOs {@link https://github.com/feross/buffer|Buffer}
+     * @param changeAddresses The addresses that can spend the change remaining from the spent UTXOs.
+     * @param memo Optional contains arbitrary bytes, up to 256 bytes
+     * @param asOf Optional. The timestamp to verify the transaction against as a {@link https://github.com/indutny/bn.js/|BN}
+     * @param changeThreshold Optional. The number of signatures required to spend the funds in the resultant change UTXO
+     * @param depositTxs The deposit transactions with which the claiblable rewards are associated
+     * @param claimableOwnerIDs The ownerIDs of the rewards to claim
+     * @param claimedAmounts The amounts of the rewards to claim
+     * @param claimTo The address to claimed rewards will be directed to
+     * @param claimableSigners The signers of the claimable rewards
+     *
+     * @returns An unsigned transaction created from the passed in parameters.
+     */
+    buildClaimTx: (utxoset: UTXOSet, fromAddresses: string[], changeAddresses: string[], memo: PayloadBase | Buffer, asOf: BN, changeThreshold: number, depositTxs: string[] | Buffer[], claimableOwnerIDs: string[] | Buffer[], claimedAmounts: BN[], claimTo: OutputOwners, claimableSigners?: [number, Buffer][]) => Promise<UnsignedTx>;
     /**
      * @ignore
      */

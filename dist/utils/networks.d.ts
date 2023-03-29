@@ -55,6 +55,10 @@ export interface Network {
     X: X;
     P: P;
 }
+export interface Chain {
+    alias: string;
+    id: string;
+}
 /**
  * A class for storing predefined / fetched networks
  */
