@@ -12,7 +12,7 @@ import { UnsignedTx, Tx } from "./tx";
 import { PayloadBase } from "../../utils/payload";
 import { UTXOSet } from "../platformvm/utxos";
 import { PersistanceOptions } from "../../utils/persistenceoptions";
-import { APIDeposit, DepositOffer, GetRewardUTXOsResponse, GetStakeResponse, GetConfigurationResponse, Subnet, GetValidatorsAtResponse, GetBalanceResponse, GetUTXOsResponse, Blockchain, GetTxStatusResponse, GetMinStakeResponse, SpendReply, MultisigAliasReply, GetClaimablesResponse } from "./interfaces";
+import { DepositOffer, GetRewardUTXOsResponse, GetStakeResponse, GetConfigurationResponse, Subnet, GetValidatorsAtResponse, GetBalanceResponse, GetUTXOsResponse, Blockchain, GetTxStatusResponse, GetMinStakeResponse, SpendReply, MultisigAliasReply, GetClaimablesResponse, GetDepositsResponse } from "./interfaces";
 import { GenesisData } from "../avm";
 import { Auth, LockMode, Builder, FromSigner } from "./builder";
 import { Network } from "../../utils/networks";
@@ -240,13 +240,13 @@ export declare class PlatformVMAPI extends JRPCAPI {
      */
     getAllDepositOffers: (active?: boolean) => Promise<DepositOffer[]>;
     /**
-     * Returns deposits coressponding to requested txIDs.
+     * Returns deposits corresponding to requested txIDs.
      *
      * @param depositTxIDs A list of txIDs (cb58) to request deposits for.
      *
-     * @returns Promise for a list containing deposits.
+     * @returns Promise for a GetDepositsResponse object.
      */
-    getDeposits: (depositTxIDs: string[]) => Promise<APIDeposit[]>;
+    getDeposits: (depositTxIDs: string[]) => Promise<GetDepositsResponse>;
     /**
      * List amounts that can be claimed: validator rewards, expired deposit rewards, active deposit rewards claimable at current time.
      *
