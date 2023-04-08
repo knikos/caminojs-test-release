@@ -251,13 +251,12 @@ export declare class PlatformVMAPI extends JRPCAPI {
      * List amounts that can be claimed: validator rewards, expired deposit rewards, active deposit rewards claimable at current time.
      *
      * @param addresses An array of addresses as cb58 strings or addresses as {@link https://github.com/feross/buffer|Buffer}s
-     * @param depositTxIDs An array of deposit transactions ids
      * @param locktime Optional. The locktime field created in the resulting outputs
      * @param threshold Optional. The number of signatures required to spend the funds in the resultant UTXO
      *
      * @returns Promise for an object containing the amounts that can be claimed.
      */
-    getClaimables: (addresses: string[], depositTxIDs: string[], locktime?: string, threshold?: number) => Promise<GetClaimablesResponse>;
+    getClaimables: (addresses: string[], locktime?: string, threshold?: number) => Promise<GetClaimablesResponse>;
     /**
      * Lists the set of pending validators.
      *
@@ -736,15 +735,16 @@ export declare class PlatformVMAPI extends JRPCAPI {
      * @param memo Optional contains arbitrary bytes, up to 256 bytes
      * @param asOf Optional. The timestamp to verify the transaction against as a {@link https://github.com/indutny/bn.js/|BN}
      * @param changeThreshold Optional. The number of signatures required to spend the funds in the resultant change UTXO
-     * @param depositTxs The deposit transactions with which the claiblable rewards are associated
-     * @param claimableOwnerIDs The ownerIDs of the rewards to claim
-     * @param claimedAmounts The amounts of the rewards to claim
+     * @param depositTxIDs Optional. The deposit transactions ids with which the claimable rewards are associated
+     * @param claimableOwners Optional. The owners of the rewards to claim
+     * @param claimedAmounts Optional. The amounts of the rewards to claim
      * @param claimTo The address to claimed rewards will be directed to
+     * @param claimType The type of claim tx
      * @param claimableSigners The signers of the claimable rewards
      *
      * @returns An unsigned transaction created from the passed in parameters.
      */
-    buildClaimTx: (utxoset: UTXOSet, fromAddresses: string[], changeAddresses: string[], memo: PayloadBase | Buffer, asOf: BN, changeThreshold: number, depositTxs: string[] | Buffer[], claimableOwnerIDs: string[] | Buffer[], claimedAmounts: BN[], claimTo: OutputOwners, claimableSigners?: [number, Buffer][]) => Promise<UnsignedTx>;
+    buildClaimTx: (utxoset: UTXOSet, fromAddresses: string[], changeAddresses: string[], memo: PayloadBase | Buffer, asOf: BN, changeThreshold: number, depositTxIDs: string[] | Buffer[], claimableOwners: OutputOwners[], claimedAmounts: BN[], claimTo: OutputOwners, claimType: BN, claimableSigners?: [number, Buffer][]) => Promise<UnsignedTx>;
     /**
      * @ignore
      */

@@ -24,6 +24,7 @@ export declare class ClaimTx extends BaseTx {
     protected claimableOwnerIDs: Buffer[];
     protected numClaimedAmounts: Buffer;
     protected claimedAmounts: Buffer[];
+    protected claimType: Buffer;
     protected claimTo: ParseableOutput;
     protected sigCount: Buffer;
     protected sigIdxs: SigIdx[];
@@ -85,12 +86,13 @@ export declare class ClaimTx extends BaseTx {
      * @param blockchainID Optional blockchainID, default Buffer.alloc(32, 16)
      * @param outs Optional array of the [[TransferableOutput]]s
      * @param ins Optional array of the [[TransferableInput]]s
-     * @param depositTxs Optional array of the deposit txids
+     * @param depositTxIDs Optional array of the deposit tx ids
      * @param claimableOwnerIDs Optional array of the claimable owner ids
      * @param claimedAmounts Optional array of the claimed amounts
+     * @param claimType Optional the type of the claim
      * @param claimTo Optional the owner of the rewards
      */
-    constructor(networkID?: number, blockchainID?: Buffer, outs?: TransferableOutput[], ins?: TransferableInput[], memo?: Buffer, depositTxs?: string[] | Buffer[], claimableOwnerIDs?: string[] | Buffer[], claimedAmounts?: BN[], claimTo?: ParseableOutput);
+    constructor(networkID?: number, blockchainID?: Buffer, outs?: TransferableOutput[], ins?: TransferableInput[], memo?: Buffer, depositTxIDs?: string[] | Buffer[], claimableOwnerIDs?: string[] | Buffer[], claimedAmounts?: BN[], claimType?: BN, claimTo?: ParseableOutput);
     /**
      * Takes the bytes of an [[UnsignedTx]] and returns an array of [[Credential]]s
      *

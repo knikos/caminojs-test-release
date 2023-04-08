@@ -5,14 +5,16 @@
 import { Buffer } from "buffer/";
 import { Credential } from "./credentials";
 import BN from "bn.js";
-import { StandardKeyChain, StandardKeyPair } from "./keychain";
+import { SignerKeyChain, SignerKeyPair } from "./keychain";
+import { OutputOwners } from "./output";
 import { Serializable, SerializedEncoding } from "../utils/serialization";
 /**
  * Class representing a base for all transactions.
  */
-export declare abstract class EVMStandardBaseTx<KPClass extends StandardKeyPair, KCClass extends StandardKeyChain<KPClass>> extends Serializable {
+export declare abstract class EVMStandardBaseTx<KPClass extends SignerKeyPair, KCClass extends SignerKeyChain> extends Serializable {
     protected _typeName: string;
     protected _typeID: any;
+    protected _outputOwners: OutputOwners[];
     serialize(encoding?: SerializedEncoding): object;
     deserialize(fields: object, encoding?: SerializedEncoding): void;
     protected networkID: Buffer;
@@ -21,6 +23,14 @@ export declare abstract class EVMStandardBaseTx<KPClass extends StandardKeyPair,
      * Returns the id of the [[StandardBaseTx]]
      */
     abstract getTxType(): number;
+    /**
+     * @returns The outputOwners of inputs, one per input
+     */
+    getOutputOwners(): OutputOwners[];
+    /**
+     * @params The outputOwners of inputs, one per input
+     */
+    setOutputOwners(owners: OutputOwners[]): void;
     /**
      * Returns the NetworkID as a number
      */
@@ -53,7 +63,7 @@ export declare abstract class EVMStandardBaseTx<KPClass extends StandardKeyPair,
 /**
  * Class representing an unsigned transaction.
  */
-export declare abstract class EVMStandardUnsignedTx<KPClass extends StandardKeyPair, KCClass extends StandardKeyChain<KPClass>, SBTx extends EVMStandardBaseTx<KPClass, KCClass>> extends Serializable {
+export declare abstract class EVMStandardUnsignedTx<KPClass extends SignerKeyPair, KCClass extends SignerKeyChain, SBTx extends EVMStandardBaseTx<KPClass, KCClass>> extends Serializable {
     protected _typeName: string;
     protected _typeID: any;
     serialize(encoding?: SerializedEncoding): object;
@@ -99,7 +109,7 @@ export declare abstract class EVMStandardUnsignedTx<KPClass extends StandardKeyP
 /**
  * Class representing a signed transaction.
  */
-export declare abstract class EVMStandardTx<KPClass extends StandardKeyPair, KCClass extends StandardKeyChain<KPClass>, SUBTx extends EVMStandardUnsignedTx<KPClass, KCClass, EVMStandardBaseTx<KPClass, KCClass>>> extends Serializable {
+export declare abstract class EVMStandardTx<KPClass extends SignerKeyPair, KCClass extends SignerKeyChain, SUBTx extends EVMStandardUnsignedTx<KPClass, KCClass, EVMStandardBaseTx<KPClass, KCClass>>> extends Serializable {
     protected _typeName: string;
     protected _typeID: any;
     serialize(encoding?: SerializedEncoding): object;

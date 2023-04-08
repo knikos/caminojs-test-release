@@ -72,12 +72,12 @@ import {
   SpendReply,
   AddressParams,
   MultisigAliasReply,
-  GetClaimablesParams,
   GetClaimablesResponse,
   GetAllDepositOffersParams,
   GetAllDepositOffersResponse,
   GetDepositsParams,
-  GetDepositsResponse
+  GetDepositsResponse,
+  Owner
 } from "./interfaces"
 import { TransferableInput } from "./inputs"
 import { TransferableOutput } from "./outputs"
@@ -86,6 +86,7 @@ import { GenesisData } from "../avm"
 import { Auth, LockMode, Builder, FromSigner } from "./builder"
 import { Network } from "../../utils/networks"
 import { Spender } from "./spender"
+import createHash from "create-hash"
 
 /**
  * @ignore
@@ -659,7 +660,6 @@ export class PlatformVMAPI extends JRPCAPI {
    * List amounts that can be claimed: validator rewards, expired deposit rewards, active deposit rewards claimable at current time.
    *
    * @param addresses An array of addresses as cb58 strings or addresses as {@link https://github.com/feross/buffer|Buffer}s
-   * @param depositTxIDs An array of deposit transactions ids
    * @param locktime Optional. The locktime field created in the resulting outputs
    * @param threshold Optional. The number of signatures required to spend the funds in the resultant UTXO
    *
@@ -667,17 +667,13 @@ export class PlatformVMAPI extends JRPCAPI {
    */
   getClaimables = async (
     addresses: string[],
-    depositTxIDs: string[],
     locktime: string = undefined,
     threshold: number = 1
   ): Promise<GetClaimablesResponse> => {
-    const params: GetClaimablesParams = {
+    const params: Owner = {
+      locktime,
       threshold,
-      addresses,
-      depositTxIDs
-    }
-    if (typeof locktime !== "undefined") {
-      params.locktime = locktime
+      addresses
     }
     const response: RequestResponseData = await this.callMethod(
       "platform.getClaimables",
@@ -2426,10 +2422,11 @@ export class PlatformVMAPI extends JRPCAPI {
    * @param memo Optional contains arbitrary bytes, up to 256 bytes
    * @param asOf Optional. The timestamp to verify the transaction against as a {@link https://github.com/indutny/bn.js/|BN}
    * @param changeThreshold Optional. The number of signatures required to spend the funds in the resultant change UTXO
-   * @param depositTxs The deposit transactions with which the claiblable rewards are associated
-   * @param claimableOwnerIDs The ownerIDs of the rewards to claim
-   * @param claimedAmounts The amounts of the rewards to claim
+   * @param depositTxIDs Optional. The deposit transactions ids with which the claimable rewards are associated
+   * @param claimableOwners Optional. The owners of the rewards to claim
+   * @param claimedAmounts Optional. The amounts of the rewards to claim
    * @param claimTo The address to claimed rewards will be directed to
+   * @param claimType The type of claim tx
    * @param claimableSigners The signers of the claimable rewards
    *
    * @returns An unsigned transaction created from the passed in parameters.
@@ -2441,10 +2438,11 @@ export class PlatformVMAPI extends JRPCAPI {
     memo: PayloadBase | Buffer = undefined,
     asOf: BN = ZeroBN,
     changeThreshold: number = 1,
-    depositTxs: string[] | Buffer[],
-    claimableOwnerIDs: string[] | Buffer[],
-    claimedAmounts: BN[],
+    depositTxIDs: string[] | Buffer[] = [],
+    claimableOwners: OutputOwners[] = [],
+    claimedAmounts: BN[] = [],
     claimTo: OutputOwners,
+    claimType: BN,
     claimableSigners: [number, Buffer][] = []
   ): Promise<UnsignedTx> => {
     const caller = "buildClaimTx"
@@ -2456,11 +2454,30 @@ export class PlatformVMAPI extends JRPCAPI {
     if (memo instanceof PayloadBase) {
       memo = memo.getPayload()
     }
+    if (depositTxIDs.length === 0 && claimableOwners.length === 0) {
+      throw new Error("Must provide at least one depositTxID or claimableOwner")
+    }
+    if (claimedAmounts.length !== claimableOwners.length) {
+      throw new Error("Must provide claimedAmounts for each claimableOwner")
+    }
 
     const avaxAssetID: Buffer = await this.getAVAXAssetID()
     const networkID: number = this.core.getNetworkID()
     const blockchainID: Buffer = bintools.cb58Decode(this.blockchainID)
     const fee: BN = this.getTxFee()
+
+    const claimableOwnerIDs: Buffer[] = []
+    // for each claimable owner, create a sha256 out of its bytes prefixed with the latest codecID
+    for (let i = 0; i < claimableOwners.length; i++) {
+      const b = Buffer.alloc(2, PlatformVMConstants.LATESTCODEC)
+      claimableOwnerIDs.push(
+        Buffer.from(
+          createHash("sha256")
+            .update(Buffer.concat([b, claimableOwners[i].toBuffer()]))
+            .digest()
+        )
+      )
+    }
 
     const unsignedClaimTx: UnsignedTx = await this._getBuilder(
       utxoset
@@ -2474,10 +2491,11 @@ export class PlatformVMAPI extends JRPCAPI {
       memo,
       asOf,
       changeThreshold,
-      depositTxs,
+      depositTxIDs,
       claimableOwnerIDs,
       claimedAmounts,
       claimTo,
+      claimType,
       claimableSigners
     )
 

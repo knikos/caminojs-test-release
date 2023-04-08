@@ -8,6 +8,7 @@ import { TransferableInput } from "./inputs";
 import { BaseTx } from "./basetx";
 import BN from "bn.js";
 import { SerializedEncoding } from "../../utils/serialization";
+import { UTXO } from "./utxos";
 /**
  * Class representing an unsigned Export transaction.
  */
@@ -36,6 +37,10 @@ export declare class ExportTx extends BaseTx {
      * Returns the destinationChain as a {@link https://github.com/feross/buffer|Buffer}
      */
     getDestinationChain(): Buffer;
+    /**
+     * Returns UTXOIds build from exportedOuts
+     */
+    getUTXOs(txID: Buffer): UTXO[];
     /**
      * Takes a {@link https://github.com/feross/buffer|Buffer} containing an [[ExportTx]], parses it, populates the class, and returns the length of the [[ExportTx]] in bytes.
      *

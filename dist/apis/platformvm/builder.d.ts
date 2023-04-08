@@ -314,14 +314,15 @@ export declare class Builder {
      * @param memo Optional contains arbitrary bytes, up to 256 bytes
      * @param asOf Optional. The timestamp to verify the transaction against as a {@link https://github.com/indutny/bn.js/|BN}
      * @param changeThreshold Optional. The number of signatures required to spend the funds in the resultant change UTXO
-     * @param depositTxs The deposit transactions with which the claiblable rewards are associated
+     * @param depositTxIDs The deposit transactions ids with which the claiblable rewards are associated
      * @param claimableOwnerIDs The ownerIDs of the rewards to claim
      * @param claimedAmounts The amounts of the rewards to claim
+     * @param claimType The type of claim tx
      * @param claimTo The address to claimed rewards will be directed to
      *
      * @returns An unsigned ClaimTx created from the passed in parameters.
      */
-    buildClaimTx: (networkID: number, blockchainID: Buffer, fromSigner: FromSigner, changeAddresses: Buffer[], fee: BN, feeAssetID: Buffer, memo: Buffer, asOf: BN, changeThreshold: number, depositTxs: string[] | Buffer[], claimableOwnerIDs: string[] | Buffer[], claimedAmounts: BN[], claimTo: OutputOwners, claimableSigners?: [number, Buffer][]) => Promise<UnsignedTx>;
+    buildClaimTx: (networkID: number, blockchainID: Buffer, fromSigner: FromSigner, changeAddresses: Buffer[], fee: BN, feeAssetID: Buffer, memo: Buffer, asOf: BN, changeThreshold: number, depositTxIDs: string[] | Buffer[], claimableOwnerIDs: string[] | Buffer[], claimedAmounts: BN[], claimTo: OutputOwners, claimType: BN, claimableSigners?: [number, Buffer][]) => Promise<UnsignedTx>;
     _feeCheck(fee: BN, feeAssetID: Buffer): boolean;
 }
 //# sourceMappingURL=builder.d.ts.map

@@ -4,7 +4,7 @@
  */
 import { Buffer } from "buffer/";
 import { KeyChain, KeyPair } from "./keychain";
-import { EVMStandardTx, EVMStandardUnsignedTx } from "../../common/evmtx";
+import { EVMStandardTx, EVMStandardUnsignedTx } from "../../common";
 import { EVMBaseTx } from "./basetx";
 import { SerializedEncoding } from "../../utils/serialization";
 /**
