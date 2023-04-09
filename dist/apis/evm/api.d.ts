@@ -223,7 +223,7 @@ export declare class EVMAPI extends JRPCAPI {
      * @remarks
      * This helper exists because the endpoint API should be the primary point of entry for most functionality.
      */
-    buildImportTx: (utxoset: UTXOSet, toAddress: string, ownerAddresses: string[], sourceChain: Buffer | string, fee?: BN) => Promise<UnsignedTx>;
+    buildImportTx: (utxoset: UTXOSet | undefined, toAddress: string, ownerAddresses: string[], sourceChain: Buffer | string, fee?: BN) => Promise<UnsignedTx>;
     /**
      * Helper function which creates an unsigned Export Tx. For more granular control, you may create your own
      * [[UnsignedTx]] manually (with their corresponding [[TransferableInput]]s, [[TransferableOutput]]s).

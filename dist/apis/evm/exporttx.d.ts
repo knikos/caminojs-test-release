@@ -3,9 +3,9 @@
  * @module API-EVM-ExportTx
  */
 import { Buffer } from "buffer/";
-import { KeyChain } from "./keychain";
 import { EVMBaseTx } from "./basetx";
 import { Credential } from "../../common/credentials";
+import { SignerKeyChain } from "../../common/keychain";
 import { EVMInput } from "./inputs";
 import { SerializedEncoding } from "../../utils/serialization";
 import { TransferableOutput } from "./outputs";
@@ -51,7 +51,7 @@ export declare class ExportTx extends EVMBaseTx {
      *
      * @returns An array of [[Credential]]s
      */
-    sign(msg: Buffer, kc: KeyChain): Credential[];
+    sign(msg: Buffer, kc: SignerKeyChain): Credential[];
     /**
      * Class representing a ExportTx.
      *

@@ -3,14 +3,14 @@
  * @module API-EVM-BaseTx
  */
 import { Buffer } from "buffer/";
-import { KeyChain, KeyPair } from "./keychain";
 import { EVMStandardBaseTx } from "../../common/evmtx";
 import { Credential } from "../../common/credentials";
+import { SignerKeyChain, SignerKeyPair } from "../../common/keychain";
 import { SerializedEncoding } from "../../utils/serialization";
 /**
  * Class representing a base for all transactions.
  */
-export declare class EVMBaseTx extends EVMStandardBaseTx<KeyPair, KeyChain> {
+export declare class EVMBaseTx extends EVMStandardBaseTx<SignerKeyPair, SignerKeyChain> {
     protected _typeName: string;
     protected _typeID: any;
     deserialize(fields: object, encoding?: SerializedEncoding): void;
@@ -36,7 +36,7 @@ export declare class EVMBaseTx extends EVMStandardBaseTx<KeyPair, KeyChain> {
      *
      * @returns An array of [[Credential]]s
      */
-    sign(msg: Buffer, kc: KeyChain): Credential[];
+    sign(msg: Buffer, kc: SignerKeyChain): Credential[];
     clone(): this;
     create(...args: any[]): this;
     select(id: number, ...args: any[]): this;

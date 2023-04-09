@@ -3,8 +3,7 @@
  * @module API-EVM-Transactions
  */
 import { Buffer } from "buffer/";
-import { KeyChain, KeyPair } from "./keychain";
-import { EVMStandardTx, EVMStandardUnsignedTx } from "../../common";
+import { EVMStandardTx, EVMStandardUnsignedTx, SignerKeyChain, SignerKeyPair } from "../../common";
 import { EVMBaseTx } from "./basetx";
 import { SerializedEncoding } from "../../utils/serialization";
 /**
@@ -15,7 +14,7 @@ import { SerializedEncoding } from "../../utils/serialization";
  * @returns An instance of an [[EVMBaseTx]]-extended class.
  */
 export declare const SelectTxClass: (txTypeID: number, ...args: any[]) => EVMBaseTx;
-export declare class UnsignedTx extends EVMStandardUnsignedTx<KeyPair, KeyChain, EVMBaseTx> {
+export declare class UnsignedTx extends EVMStandardUnsignedTx<SignerKeyPair, SignerKeyChain, EVMBaseTx> {
     protected _typeName: string;
     protected _typeID: any;
     deserialize(fields: object, encoding?: SerializedEncoding): void;
@@ -28,9 +27,9 @@ export declare class UnsignedTx extends EVMStandardUnsignedTx<KeyPair, KeyChain,
      *
      * @returns A signed [[StandardTx]]
      */
-    sign(kc: KeyChain): Tx;
+    sign(kc: SignerKeyChain): Tx;
 }
-export declare class Tx extends EVMStandardTx<KeyPair, KeyChain, UnsignedTx> {
+export declare class Tx extends EVMStandardTx<SignerKeyPair, SignerKeyChain, UnsignedTx> {
     protected _typeName: string;
     protected _typeID: any;
     deserialize(fields: object, encoding?: SerializedEncoding): void;

@@ -8,7 +8,7 @@ import { EVMOutput } from "./outputs";
 import { TransferableInput } from "./inputs";
 import { EVMBaseTx } from "./basetx";
 import { Credential } from "../../common/credentials";
-import { KeyChain } from "./keychain";
+import { SignerKeyChain } from "../../common/keychain";
 import { SerializedEncoding } from "../../utils/serialization";
 /**
  * Class representing an unsigned Import transaction.
@@ -65,7 +65,7 @@ export declare class ImportTx extends EVMBaseTx {
      *
      * @returns An array of [[Credential]]s
      */
-    sign(msg: Buffer, kc: KeyChain): Credential[];
+    sign(msg: Buffer, kc: SignerKeyChain): Credential[];
     /**
      * Class representing an unsigned Import transaction.
      *

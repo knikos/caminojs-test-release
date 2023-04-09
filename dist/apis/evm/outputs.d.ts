@@ -49,6 +49,7 @@ export declare class EVMOutput {
     protected amount: Buffer;
     protected amountValue: BN;
     protected assetID: Buffer;
+    serialize(encoding?: SerializedEncoding): object;
     /**
      * Returns a function used to sort an array of [[EVMOutput]]s
      */
