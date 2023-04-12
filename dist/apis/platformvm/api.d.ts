@@ -524,6 +524,27 @@ export declare class PlatformVMAPI extends JRPCAPI {
      */
     getMultisigAlias: (address: string) => Promise<MultisigAliasReply>;
     /**
+     * Helper function which creates an unsigned transaction. For more granular control, you may create your own
+     * [[UnsignedTx]] manually (with their corresponding [[TransferableInput]]s, [[TransferableOutput]]s, and [[TransferOperation]]s).
+     *
+     * @param utxoset A set of UTXOs that the transaction is built on
+     * @param amount The amount of AssetID to be spent in its smallest denomination, represented as {@link https://github.com/indutny/bn.js/|BN}.
+     * @param toAddresses The addresses to send the funds
+     * @param fromAddresses The addresses being used to send the funds from the UTXOs provided
+     * @param changeAddresses The addresses that can spend the change remaining from the spent UTXOs
+     * @param memo Optional CB58 Buffer or String which contains arbitrary bytes, up to 256 bytes
+     * @param asOf Optional. The timestamp to verify the transaction against as a {@link https://github.com/indutny/bn.js/|BN}
+     * @param locktime Optional. The locktime field created in the resulting outputs
+     * @param toThreshold Optional. The number of signatures required to spend the funds in the resultant UTXO
+     * @param changeThreshold Optional. The number of signatures required to spend the funds in the resultant change UTXO
+     *
+     * @returns An unsigned transaction ([[UnsignedTx]]) which contains a [[BaseTx]].
+     *
+     * @remarks
+     * This helper exists because the endpoint API should be the primary point of entry for most functionality.
+     */
+    buildBaseTx: (utxoset: UTXOSet, amount: BN, toAddresses: string[], fromAddresses: FromType, changeAddresses: string[], memo?: PayloadBase | Buffer, asOf?: BN, locktime?: BN, toThreshold?: number, changeThreshold?: number) => Promise<UnsignedTx>;
+    /**
      * Helper function which creates an unsigned Import Tx. For more granular control, you may create your own
      * [[UnsignedTx]] manually (with their corresponding [[TransferableInput]]s, [[TransferableOutput]]s, and [[TransferOperation]]s).
      *

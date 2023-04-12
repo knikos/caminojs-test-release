@@ -28,6 +28,9 @@ export declare class RegisterNodeTx extends BaseTx {
      * Returns the id of the [[RegisterNodeTx]]
      */
     getTxType(): number;
+    getOldNodeID(): Buffer;
+    getNewNodeID(): Buffer;
+    getConsortiumMemberAddress(): Buffer;
     /**
      * Returns the subnetAuth
      */

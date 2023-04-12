@@ -10,6 +10,11 @@ import { SerializedEncoding } from "../../utils/serialization";
 import BN from "bn.js";
 import { Credential, SigIdx } from "../../common";
 import { KeyChain } from "caminojs/apis/platformvm/keychain";
+export declare const ClaimType: {
+    readonly VALIDATOR_REWARD: BN;
+    readonly EXPIRED_DEPOSIT_REWARD: BN;
+    readonly ALL: BN;
+};
 /**
  * Class representing an unsigned ClaimTx transaction.
  */
@@ -48,6 +53,7 @@ export declare class ClaimTx extends BaseTx {
      * Returns the claimTo
      */
     getClaimTo(): ParseableOutput;
+    getClaimType(): Buffer;
     /**
      * Takes a {@link https://github.com/feross/buffer|Buffer} containing a [[ClaimTx]], parses it, populates the class, and returns the length of the [[ClaimTx]] in bytes.
      *
