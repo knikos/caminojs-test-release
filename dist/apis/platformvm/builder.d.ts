@@ -317,12 +317,13 @@ export declare class Builder {
      * @param depositTxIDs The deposit transactions ids with which the claiblable rewards are associated
      * @param claimableOwnerIDs The ownerIDs of the rewards to claim
      * @param claimedAmounts The amounts of the rewards to claim
-     * @param claimType The type of claim tx
      * @param claimTo The address to claimed rewards will be directed to
+     * @param signers The addresses which need to sign to verify claims (deposit / treasury)
+     * @param claimType The type of claim tx
      *
      * @returns An unsigned ClaimTx created from the passed in parameters.
      */
-    buildClaimTx: (networkID: number, blockchainID: Buffer, fromSigner: FromSigner, changeAddresses: Buffer[], fee: BN, feeAssetID: Buffer, memo: Buffer, asOf: BN, changeThreshold: number, depositTxIDs: string[] | Buffer[], claimableOwnerIDs: string[] | Buffer[], claimedAmounts: BN[], claimTo: OutputOwners, claimType: BN, claimableSigners?: [number, Buffer][]) => Promise<UnsignedTx>;
+    buildClaimTx: (networkID: number, blockchainID: Buffer, fromSigner: FromSigner, changeAddresses: Buffer[], fee: BN, feeAssetID: Buffer, memo: Buffer, asOf: BN, changeThreshold: number, depositTxIDs: string[] | Buffer[], claimableOwnerIDs: string[] | Buffer[], claimedAmounts: BN[], claimTo: OutputOwners, signers: Buffer[], claimType: BN) => Promise<UnsignedTx>;
     _feeCheck(fee: BN, feeAssetID: Buffer): boolean;
 }
 //# sourceMappingURL=builder.d.ts.map

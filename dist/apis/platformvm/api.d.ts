@@ -760,12 +760,12 @@ export declare class PlatformVMAPI extends JRPCAPI {
      * @param claimableOwners Optional. The owners of the rewards to claim
      * @param claimedAmounts Optional. The amounts of the rewards to claim
      * @param claimTo The address to claimed rewards will be directed to
+     * @param signers The addresses which need to sign to verify claims (deposit / treasury)
      * @param claimType The type of claim tx
-     * @param claimableSigners The signers of the claimable rewards
      *
      * @returns An unsigned transaction created from the passed in parameters.
      */
-    buildClaimTx: (utxoset: UTXOSet, fromAddresses: string[], changeAddresses: string[], memo: PayloadBase | Buffer, asOf: BN, changeThreshold: number, depositTxIDs: string[] | Buffer[], claimableOwners: OutputOwners[], claimedAmounts: BN[], claimTo: OutputOwners, claimType: BN, claimableSigners?: [number, Buffer][]) => Promise<UnsignedTx>;
+    buildClaimTx: (utxoset: UTXOSet, fromAddresses: FromType, changeAddresses: string[], memo: PayloadBase | Buffer, asOf: BN, changeThreshold: number, depositTxIDs: string[] | Buffer[], claimableOwners: OutputOwners[], claimedAmounts: BN[], claimTo: OutputOwners, signers: Buffer[], claimType: BN) => Promise<UnsignedTx>;
     /**
      * @ignore
      */
