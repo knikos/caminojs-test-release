@@ -24,12 +24,16 @@ export declare class SigIdx extends NBytes {
      * Retrieves the source address for the signature
      */
     getSource: () => Buffer;
+    /**
+     * Retrieves the index buffer for the signature
+     */
+    getBytes: () => Buffer;
     clone(): this;
     create(): this;
     /**
      * Type representing a [[Signature]] index used in [[Input]]
      */
-    constructor();
+    constructor(addressIdx?: number, address?: Buffer);
 }
 /**
  * Signature for a [[Tx]]

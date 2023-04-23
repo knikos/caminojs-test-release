@@ -17,7 +17,6 @@ export interface BaseInput {
     getCredentialID(): number;
     addSignatureIdx(addressIdx: number, address: Buffer): void;
     getSigIdxs(): SigIdx[];
-    setSigIdxs(sigIdxs: SigIdx[]): any;
     clone(): this;
     create(...args: any[]): this;
 }
@@ -35,11 +34,6 @@ export declare abstract class Input extends Serializable {
      * Returns the array of [[SigIdx]] for this [[Input]]
      */
     getSigIdxs: () => SigIdx[];
-    /**
-     * Sets the array of [[SigIdx]] for this [[Input]]
-     * Normaly only called for Multisig replacement
-     */
-    setSigIdxs: (sigIdxs: SigIdx[]) => void;
     abstract getCredentialID(): number;
     /**
      * Creates and adds a [[SigIdx]] to the [[Input]].
@@ -70,7 +64,6 @@ export declare abstract class StandardParseableInput extends Serializable {
     getInput: () => BaseInput;
     addSignatureIdx(addressIdx: number, address: Buffer): void;
     getSigIdxs: () => SigIdx[];
-    setSigIdxs: (sigIdxs: SigIdx[]) => any;
     abstract fromBuffer(bytes: Buffer, offset?: number): number;
     toBuffer(): Buffer;
     /**

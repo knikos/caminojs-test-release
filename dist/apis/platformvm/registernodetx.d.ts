@@ -62,10 +62,6 @@ export declare class RegisterNodeTx extends BaseTx {
      * Returns the array of [[SigIdx]] for this [[TX]]
      */
     getSigIdxs(): SigIdx[];
-    /**
-     * Sets the array of [[SigIdx]] for this [[TX]]
-     */
-    setSigIdxs(sigIdxs: SigIdx[]): void;
     getCredentialID(): number;
     /**
      * Takes the bytes of an [[UnsignedTx]] and returns an array of [[Credential]]s

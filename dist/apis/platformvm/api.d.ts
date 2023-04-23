@@ -12,7 +12,7 @@ import { UnsignedTx, Tx } from "./tx";
 import { PayloadBase } from "../../utils/payload";
 import { UTXOSet } from "../platformvm/utxos";
 import { PersistanceOptions } from "../../utils/persistenceoptions";
-import { DepositOffer, GetRewardUTXOsResponse, GetStakeResponse, GetConfigurationResponse, Subnet, GetValidatorsAtResponse, GetBalanceResponse, GetUTXOsResponse, Blockchain, GetTxStatusResponse, GetMinStakeResponse, SpendReply, MultisigAliasReply, GetClaimablesResponse, GetDepositsResponse } from "./interfaces";
+import { ClaimAmountParams, DepositOffer, GetRewardUTXOsResponse, GetStakeResponse, GetConfigurationResponse, Subnet, GetValidatorsAtResponse, GetBalanceResponse, GetUTXOsResponse, Blockchain, GetTxStatusResponse, GetMinStakeResponse, SpendReply, MultisigAliasReply, GetClaimablesResponse, GetDepositsResponse } from "./interfaces";
 import { GenesisData } from "../avm";
 import { Auth, LockMode, Builder, FromSigner } from "./builder";
 import { Network } from "../../utils/networks";
@@ -756,16 +756,12 @@ export declare class PlatformVMAPI extends JRPCAPI {
      * @param memo Optional contains arbitrary bytes, up to 256 bytes
      * @param asOf Optional. The timestamp to verify the transaction against as a {@link https://github.com/indutny/bn.js/|BN}
      * @param changeThreshold Optional. The number of signatures required to spend the funds in the resultant change UTXO
-     * @param depositTxIDs Optional. The deposit transactions ids with which the claimable rewards are associated
-     * @param claimableOwners Optional. The owners of the rewards to claim
-     * @param claimedAmounts Optional. The amounts of the rewards to claim
+     * @param claimAmounts The specification and authentication what and how much to claim
      * @param claimTo The address to claimed rewards will be directed to
-     * @param signers The addresses which need to sign to verify claims (deposit / treasury)
-     * @param claimType The type of claim tx
      *
      * @returns An unsigned transaction created from the passed in parameters.
      */
-    buildClaimTx: (utxoset: UTXOSet, fromAddresses: FromType, changeAddresses: string[], memo: PayloadBase | Buffer, asOf: BN, changeThreshold: number, depositTxIDs: string[] | Buffer[], claimableOwners: OutputOwners[], claimedAmounts: BN[], claimTo: OutputOwners, signers: Buffer[], claimType: BN) => Promise<UnsignedTx>;
+    buildClaimTx: (utxoset: UTXOSet, fromAddresses: FromType, changeAddresses: string[], memo: PayloadBase | Buffer, asOf: BN, changeThreshold: number, claimAmounts: ClaimAmountParams[], claimTo?: OutputOwners) => Promise<UnsignedTx>;
     /**
      * @ignore
      */

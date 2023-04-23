@@ -3,18 +3,38 @@
  * @module API-PlatformVM-ClaimTx
  */
 import { Buffer } from "buffer/";
-import { ParseableOutput, TransferableOutput } from "./outputs";
+import { TransferableOutput } from "./outputs";
 import { TransferableInput } from "./inputs";
 import { BaseTx } from "./basetx";
 import { SerializedEncoding } from "../../utils/serialization";
 import BN from "bn.js";
 import { Credential, SigIdx } from "../../common";
 import { KeyChain } from "caminojs/apis/platformvm/keychain";
-export declare const ClaimType: {
-    readonly VALIDATOR_REWARD: BN;
-    readonly EXPIRED_DEPOSIT_REWARD: BN;
-    readonly ALL: BN;
-};
+import { SubnetAuth } from "./subnetauth";
+export declare enum ClaimType {
+    VALIDATOR_REWARD = "0",
+    EXPIRED_DEPOSIT_REWARD = "1",
+    ALL_TREASURY_REWARD = "2",
+    ACTIVE_DEPOSIT_REWARD = "3"
+}
+export declare class ClaimAmount {
+    protected id: Buffer;
+    protected type: Buffer;
+    protected amount: Buffer;
+    protected auth: SubnetAuth;
+    deserialize(fields: object, encoding?: SerializedEncoding): this;
+    serialize(encoding?: SerializedEncoding): object;
+    fromBuffer(bytes: Buffer, offset?: number): number;
+    toBuffer(): Buffer;
+    /**
+     * Class representing a ClaimAmount.
+     *
+     * @param id Optional either depositTxID or OwnableHash, depends on claimType
+     * @param claimType Optional specifies the type of reward to claim
+     * @param amount Optional the amount to claim from this reward source
+     */
+    constructor(id?: Buffer, claimType?: ClaimType, amount?: BN, auth?: Buffer[]);
+}
 /**
  * Class representing an unsigned ClaimTx transaction.
  */
@@ -23,37 +43,13 @@ export declare class ClaimTx extends BaseTx {
     protected _typeID: number;
     deserialize(fields: object, encoding?: SerializedEncoding): void;
     serialize(encoding?: SerializedEncoding): object;
-    protected numDepositTxs: Buffer;
-    protected depositTxs: Buffer[];
-    protected numClaimableOwnerIDs: Buffer;
-    protected claimableOwnerIDs: Buffer[];
-    protected numClaimedAmounts: Buffer;
-    protected claimedAmounts: Buffer[];
-    protected claimType: Buffer;
-    protected claimTo: ParseableOutput;
-    protected sigCount: Buffer;
-    protected sigIdxs: SigIdx[];
+    protected numClaimAmounts: Buffer;
+    protected claimAmounts: ClaimAmount[];
+    protected sigIdxs: SigIdx[][];
     /**
      * Returns the id of the [[RegisterNodeTx]]
      */
     getTxType(): number;
-    /**
-     * Returns the array of claimed owner ids
-     */
-    getClaimableOwnerIDs(): Buffer[];
-    /**
-     * Returns the array of claimed amounts
-     */
-    getClaimedAmounts(): Buffer[];
-    /**
-     * Returns the array of deposit tx ids
-     */
-    getDepositTxs(): Buffer[];
-    /**
-     * Returns the claimTo
-     */
-    getClaimTo(): ParseableOutput;
-    getClaimType(): Buffer;
     /**
      * Takes a {@link https://github.com/feross/buffer|Buffer} containing a [[ClaimTx]], parses it, populates the class, and returns the length of the [[ClaimTx]] in bytes.
      *
@@ -71,34 +67,25 @@ export declare class ClaimTx extends BaseTx {
     clone(): this;
     create(...args: any[]): this;
     /**
-     * Creates and adds a [[SigIdx]] to the [[ClaimTx]].
+     * Adds an array of [[SigIdx]] to the [[ClaimTx]].
      *
-     * @param addressIdx The index of the address to reference in the signatures
-     * @param address The address of the source of the signature
+     * @param sigIdxs The Signature indices to verify one claimAmount
      */
-    addSignatureIdx(addressIdx: number, address: Buffer): void;
+    addSigIdxs(sigIdxs: SigIdx[]): void;
     /**
-     * Returns the array of [[SigIdx]] for this [[TX]]
+     * Returns the array of [[SigIdx[]]] for this [[TX]]
      */
-    getSigIdxs(): SigIdx[];
+    getSigIdxs(): SigIdx[][];
     /**
-     * Set the array of [[SigIdx]] for this [[TX]]
-     */
-    setSigIdxs(sigIdxs: SigIdx[]): void;
-    /**
-     * Class representing an unsigned RegisterNode transaction.
+     * Class representing an unsigned Claim transaction.
      *
      * @param networkID Optional networkID, [[DefaultNetworkID]]
      * @param blockchainID Optional blockchainID, default Buffer.alloc(32, 16)
      * @param outs Optional array of the [[TransferableOutput]]s
      * @param ins Optional array of the [[TransferableInput]]s
-     * @param depositTxIDs Optional array of the deposit tx ids
-     * @param claimableOwnerIDs Optional array of the claimable owner ids
-     * @param claimedAmounts Optional array of the claimed amounts
-     * @param claimType Optional the type of the claim
-     * @param claimTo Optional the owner of the rewards
+     * @param claimAmounts Optional array of ClaimAmount class instances
      */
-    constructor(networkID?: number, blockchainID?: Buffer, outs?: TransferableOutput[], ins?: TransferableInput[], memo?: Buffer, depositTxIDs?: string[] | Buffer[], claimableOwnerIDs?: string[] | Buffer[], claimedAmounts?: BN[], claimType?: BN, claimTo?: ParseableOutput);
+    constructor(networkID?: number, blockchainID?: Buffer, outs?: TransferableOutput[], ins?: TransferableInput[], memo?: Buffer, claimAmounts?: ClaimAmount[]);
     /**
      * Takes the bytes of an [[UnsignedTx]] and returns an array of [[Credential]]s
      *
