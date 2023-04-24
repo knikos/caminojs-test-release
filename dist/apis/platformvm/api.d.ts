@@ -12,7 +12,7 @@ import { UnsignedTx, Tx } from "./tx";
 import { PayloadBase } from "../../utils/payload";
 import { UTXOSet } from "../platformvm/utxos";
 import { PersistanceOptions } from "../../utils/persistenceoptions";
-import { ClaimAmountParams, DepositOffer, GetRewardUTXOsResponse, GetStakeResponse, GetConfigurationResponse, Subnet, GetValidatorsAtResponse, GetBalanceResponse, GetUTXOsResponse, Blockchain, GetTxStatusResponse, GetMinStakeResponse, SpendReply, MultisigAliasReply, GetClaimablesResponse, GetDepositsResponse } from "./interfaces";
+import { ClaimAmountParams, DepositOffer, GetRewardUTXOsResponse, GetStakeResponse, GetConfigurationResponse, Subnet, GetValidatorsAtResponse, GetBalanceResponse, GetUTXOsResponse, Blockchain, GetTxStatusResponse, GetMinStakeResponse, SpendReply, MultisigAliasReply, GetClaimablesResponse, GetDepositsResponse, Owner } from "./interfaces";
 import { GenesisData } from "../avm";
 import { Auth, LockMode, Builder, FromSigner } from "./builder";
 import { Network } from "../../utils/networks";
@@ -248,15 +248,13 @@ export declare class PlatformVMAPI extends JRPCAPI {
      */
     getDeposits: (depositTxIDs: string[]) => Promise<GetDepositsResponse>;
     /**
-     * List amounts that can be claimed: validator rewards, expired deposit rewards, active deposit rewards claimable at current time.
+     * List amounts that can be claimed: validator rewards, expired deposit rewards claimable at current time.
      *
-     * @param addresses An array of addresses as cb58 strings or addresses as {@link https://github.com/feross/buffer|Buffer}s
-     * @param locktime Optional. The locktime field created in the resulting outputs
-     * @param threshold Optional. The number of signatures required to spend the funds in the resultant UTXO
+     * @param owners RewardOwner of DepositTx or AddValidatorTx
      *
      * @returns Promise for an object containing the amounts that can be claimed.
      */
-    getClaimables: (addresses: string[], locktime?: string, threshold?: number) => Promise<GetClaimablesResponse>;
+    getClaimables: (owners: Owner[]) => Promise<GetClaimablesResponse>;
     /**
      * Lists the set of pending validators.
      *
