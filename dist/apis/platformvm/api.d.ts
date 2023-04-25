@@ -12,7 +12,7 @@ import { UnsignedTx, Tx } from "./tx";
 import { PayloadBase } from "../../utils/payload";
 import { UTXOSet } from "../platformvm/utxos";
 import { PersistanceOptions } from "../../utils/persistenceoptions";
-import { ClaimAmountParams, DepositOffer, GetRewardUTXOsResponse, GetStakeResponse, GetConfigurationResponse, Subnet, GetValidatorsAtResponse, GetBalanceResponse, GetUTXOsResponse, Blockchain, GetTxStatusResponse, GetMinStakeResponse, SpendReply, MultisigAliasReply, GetClaimablesResponse, GetDepositsResponse, Owner } from "./interfaces";
+import { ClaimAmountParams, DepositOffer, GetRewardUTXOsResponse, GetStakeResponse, GetConfigurationResponse, Subnet, GetValidatorsAtResponse, GetBalanceResponse, GetUTXOsResponse, Blockchain, GetTxStatusResponse, GetMinStakeResponse, SpendReply, MultisigAliasReply, GetClaimablesResponse, GetDepositsResponse, OwnerParam } from "./interfaces";
 import { GenesisData } from "../avm";
 import { Auth, LockMode, Builder, FromSigner } from "./builder";
 import { Network } from "../../utils/networks";
@@ -254,7 +254,7 @@ export declare class PlatformVMAPI extends JRPCAPI {
      *
      * @returns Promise for an object containing the amounts that can be claimed.
      */
-    getClaimables: (owners: Owner[]) => Promise<GetClaimablesResponse>;
+    getClaimables: (owners: OwnerParam[]) => Promise<GetClaimablesResponse>;
     /**
      * Lists the set of pending validators.
      *
