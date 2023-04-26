@@ -4,11 +4,14 @@
  */
 import BN from "bn.js";
 import { BaseTx } from "./basetx";
-import { TransferableOutput } from "../platformvm/outputs";
-import { TransferableInput } from "../platformvm/inputs";
+import { TransferableOutput } from "./outputs";
+import { TransferableInput } from "./inputs";
 import { Buffer } from "buffer/";
 import { ParseableOutput } from "./outputs";
 import { SerializedEncoding } from "../../utils/serialization";
+import { Credential, SigIdx } from "../../common";
+import { SubnetAuth } from "./subnetauth";
+import { KeyChain } from "./keychain";
 /**
  * Abstract class representing an transactions with validation information.
  */
@@ -181,6 +184,13 @@ export declare class AddValidatorTx extends AddDelegatorTx {
 export declare class CaminoAddValidatorTx extends AddValidatorTx {
     protected _typeName: string;
     protected _typeID: number;
+    protected nodeOwnerAuth: SubnetAuth;
+    protected sigIdxs: SigIdx[];
+    addSignatureIdx(addressIdx: number, address: Buffer): void;
+    getCredentialID(): number;
+    fromBuffer(bytes: Buffer, offset?: number): number;
+    toBuffer(): Buffer;
+    sign(msg: Buffer, kc: KeyChain): Credential[];
     /**
      * Class representing an unsigned CaminoAddValidatorTx transaction.
      *

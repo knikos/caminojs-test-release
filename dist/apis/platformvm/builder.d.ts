@@ -15,6 +15,10 @@ export declare type FromSigner = {
     from: Buffer[];
     signer: Buffer[];
 };
+export declare type NodeOwner = {
+    address: Buffer;
+    auth: [number, Buffer][];
+};
 export declare type Auth = {
     addresses: Buffer[];
     threshold: number;
@@ -214,6 +218,7 @@ export declare class Builder {
      * @param fromSigner The addresses being used to send and verify the funds from the UTXOs {@link https://github.com/feross/buffer|Buffer}
      * @param changeAddresses An array of addresses as {@link https://github.com/feross/buffer|Buffer} who gets the change leftover from the fee payment
      * @param nodeID The node ID of the validator being added.
+     * @param nodeOwner The address and signature indices of the registered nodeId owner.
      * @param startTime The Unix time when the validator starts validating the Primary Network.
      * @param endTime The Unix time when the validator stops validating the Primary Network (and staked AVAX is returned).
      * @param stakeAmount The amount being delegated as a {@link https://github.com/indutny/bn.js/|BN}
@@ -227,7 +232,7 @@ export declare class Builder {
      *
      * @returns An unsigned transaction created from the passed in parameters.
      */
-    buildCaminoAddValidatorTx: (networkID: number, blockchainID: Buffer, to: Buffer[], fromSigner: FromSigner, change: Buffer[], nodeID: Buffer, startTime: BN, endTime: BN, stakeAmount: BN, stakeAssetID: Buffer, rewards: Buffer[], rewardLocktime?: BN, rewardThreshold?: number, memo?: Buffer, asOf?: BN, toThreshold?: number, changeThreshold?: number) => Promise<UnsignedTx>;
+    buildCaminoAddValidatorTx: (networkID: number, blockchainID: Buffer, to: Buffer[], fromSigner: FromSigner, change: Buffer[], nodeID: Buffer, nodeOwner: NodeOwner, startTime: BN, endTime: BN, stakeAmount: BN, stakeAssetID: Buffer, rewards: Buffer[], rewardLocktime?: BN, rewardThreshold?: number, memo?: Buffer, asOf?: BN, toThreshold?: number, changeThreshold?: number) => Promise<UnsignedTx>;
     /**
      * Build an unsigned [[AddressStateTx]].
      *

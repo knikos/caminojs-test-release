@@ -17,6 +17,10 @@ import { GenesisData } from "../avm";
 import { Auth, LockMode, Builder, FromSigner } from "./builder";
 import { Network } from "../../utils/networks";
 declare type FromType = String[] | String[][];
+declare type NodeOwnerType = {
+    address: string;
+    auth: [number, string][];
+};
 /**
  * Class for interacting with a node's PlatformVMAPI
  *
@@ -683,6 +687,30 @@ export declare class PlatformVMAPI extends JRPCAPI {
      * @returns An unsigned transaction created from the passed in parameters.
      */
     buildCreateChainTx: (utxoset: UTXOSet, fromAddresses: FromType, changeAddresses: string[], subnetID?: string | Buffer, chainName?: string, vmID?: string, fxIDs?: string[], genesisData?: string | GenesisData, memo?: PayloadBase | Buffer, asOf?: BN, subnetAuth?: Auth, changeThreshold?: number) => Promise<UnsignedTx>;
+    /**
+     * Helper function which creates an unsigned [[CaminoAddValidatorTx]]. For more granular control, you may create your own
+     * [[UnsignedTx]] manually and import the [[CaminoAddValidatorTx]] class directly.
+     *
+     * @param utxoset A set of UTXOs that the transaction is built on
+     * @param toAddresses An array of addresses as {@link https://github.com/feross/buffer|Buffer} who received the staked tokens at the end of the staking period
+     * @param fromAddresses An array of addresses as {@link https://github.com/feross/buffer|Buffer} who own the staking UTXOs the fees in AVAX
+     * @param changeAddresses An array of addresses as {@link https://github.com/feross/buffer|Buffer} who gets the change leftover from the fee payment
+     * @param nodeID The node ID of the validator being added.
+     * @param nodeOwner The address and signature indices of the registered nodeId owner.
+     * @param startTime The Unix time when the validator starts validating the Primary Network.
+     * @param endTime The Unix time when the validator stops validating the Primary Network (and staked AVAX is returned).
+     * @param stakeAmount The amount being delegated as a {@link https://github.com/indutny/bn.js/|BN}
+     * @param rewardAddresses The addresses which will recieve the rewards from the delegated stake.
+     * @param rewardLocktime Optional. The locktime field created in the resulting reward outputs
+     * @param rewardThreshold Opional. The number of signatures required to spend the funds in the resultant reward UTXO. Default 1.
+     * @param memo Optional contains arbitrary bytes, up to 256 bytes
+     * @param asOf Optional. The timestamp to verify the transaction against as a {@link https://github.com/indutny/bn.js/|BN}
+     * @param toThreshold Optional. The number of signatures required to spend the funds in the resultant UTXO
+     * @param changeThreshold Optional. The number of signatures required to spend the funds in the resultant change UTXO
+     *
+     * @returns An unsigned transaction created from the passed in parameters.
+     */
+    buildCaminoAddValidatorTx: (utxoset: UTXOSet, toAddresses: string[], fromAddresses: FromType, changeAddresses: string[], nodeID: string, nodeOwner: NodeOwnerType, startTime: BN, endTime: BN, stakeAmount: BN, rewardAddresses: string[], rewardLocktime?: BN, rewardThreshold?: number, memo?: PayloadBase | Buffer, asOf?: BN, toThreshold?: number, changeThreshold?: number) => Promise<UnsignedTx>;
     /**
      * Build an unsigned [[AddressStateTx]].
      *
