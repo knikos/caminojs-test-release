@@ -34,6 +34,9 @@ export declare class ClaimAmount {
      * @param amount Optional the amount to claim from this reward source
      */
     constructor(id?: Buffer, claimType?: ClaimType, amount?: BN, auth?: Buffer[]);
+    getID(): Buffer;
+    getType(): Buffer;
+    getAmount(): Buffer;
 }
 /**
  * Class representing an unsigned ClaimTx transaction.
@@ -50,6 +53,7 @@ export declare class ClaimTx extends BaseTx {
      * Returns the id of the [[RegisterNodeTx]]
      */
     getTxType(): number;
+    getClaimAmounts(): ClaimAmount[];
     /**
      * Takes a {@link https://github.com/feross/buffer|Buffer} containing a [[ClaimTx]], parses it, populates the class, and returns the length of the [[ClaimTx]] in bytes.
      *

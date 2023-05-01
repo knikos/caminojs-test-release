@@ -204,6 +204,7 @@ export interface GetMinStakeResponse {
     minDelegatorStake: BN;
 }
 export interface Claimable {
+    rewardOwner?: Owner;
     validatorRewards: BN;
     expiredDepositRewards: BN;
 }
