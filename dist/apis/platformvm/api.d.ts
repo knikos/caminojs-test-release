@@ -242,7 +242,7 @@ export declare class PlatformVMAPI extends JRPCAPI {
      *
      * @returns Promise for a list containing deposit offers.
      */
-    getAllDepositOffers: (active?: boolean) => Promise<DepositOffer[]>;
+    getAllDepositOffers: (timestamp?: number) => Promise<DepositOffer[]>;
     /**
      * Returns deposits corresponding to requested txIDs.
      *

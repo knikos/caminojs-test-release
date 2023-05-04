@@ -58,7 +58,7 @@ export interface GetCurrentValidatorsParams {
     nodeIDs?: string[];
 }
 export interface GetAllDepositOffersParams {
-    active: boolean;
+    timestamp: number;
 }
 export interface SampleValidatorsParams {
     size: number | string;
