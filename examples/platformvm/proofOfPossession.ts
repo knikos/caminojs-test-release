@@ -9,9 +9,15 @@ import {
 } from "../../src/apis/platformvm"
 
 // start placeholder functions
-const getPublicKey = (privateKey): Buffer => {return new Buffer("00")}
-const sign = (publicKey, privateKey): Buffer => {return new Buffer("00")}
-const verify = (signature, message, publicKey): boolean => {return true}
+const getPublicKey = (privateKey): Buffer => {
+  return new Buffer("00")
+}
+const sign = (publicKey, privateKey): Buffer => {
+  return new Buffer("00")
+}
+const verify = (signature, message, publicKey): boolean => {
+  return true
+}
 // end placeholder functions
 
 const ip: string = "localhost"
@@ -28,7 +34,7 @@ const main = async (): Promise<any> => {
   // 48 byte public key
   const publicKey = getPublicKey(privateKey) as Buffer
   // 96 byte signature
-  const signature = await sign(publicKey, privateKey) as Buffer
+  const signature = (await sign(publicKey, privateKey)) as Buffer
   const proofOfPossession: ProofOfPossession = new ProofOfPossession(
     publicKey,
     signature

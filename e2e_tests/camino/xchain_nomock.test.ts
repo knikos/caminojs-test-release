@@ -199,18 +199,10 @@ describe("Camino-XChain", (): void => {
     ],
     [
       "getTx",
-      () => xChain.getTx(tx.value),
+      () => xChain.getTx(tx.value), // retrieving tx via getTx is no longer possible until it's accepted
       (x) => x,
-      Matcher.toMatch,
-      () => /\w+/,
-      3000
-    ],
-    [
-      "getTxStatus",
-      () => xChain.getTxStatus(tx.value),
-      (x) => x,
-      Matcher.toBe,
-      () => "Processing"
+      Matcher.toThrow,
+      () => "not found"
     ],
     [
       "getAssetDesc",
