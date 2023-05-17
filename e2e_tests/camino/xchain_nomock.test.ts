@@ -202,7 +202,8 @@ describe("Camino-XChain", (): void => {
       () => xChain.getTx(tx.value),
       (x) => x,
       Matcher.toMatch,
-      () => /\w+/
+      () => /\w+/,
+      3000
     ],
     [
       "getTxStatus",

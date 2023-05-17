@@ -1,5 +1,5 @@
 import { Avalanche, BinTools, BN, Buffer } from "caminojs/index"
-import { AVMAPI, KeyChain as AVMKeyChain } from "caminojs/apis/avm"
+import { EVMAPI, KeyChain as EVMKeyChain } from "caminojs/apis/evm"
 import {
   PlatformVMAPI,
   KeyChain,
@@ -28,13 +28,19 @@ const avalanche: Avalanche = new Avalanche(
 )
 
 const bintools: BinTools = BinTools.getInstance()
+// X-local18jma8ppw3nhx5r4ap8clazz0dps7rv5u9xde7p
 const privKey: string = `${PrivateKeyPrefix}${DefaultLocalGenesisPrivateKey}`
+// P-local15s7p7mkdev0uajrd0pzxh88kr8ryccztnlmzvj
+const privKey2 = "PrivateKey-R6e8f5QSa89DjpvL9asNdhdJ4u8VqzMJStPV8VVdDmLgPd8a4"
+
 const exportedOuts: TransferableOutput[] = []
 const outputs: TransferableOutput[] = []
 const inputs: TransferableInput[] = []
-const threshold: number = 1
+const threshold: number = 2
 const locktime: BN = new BN(0)
-const memo: Buffer = Buffer.from("Manually Export AVAX from P-Chain to X-Chain")
+const memo: Buffer = Buffer.from(
+  "Export AVAX from P-Chain to C-Chain and consume a multisig output and create a multisig atomic output"
+)
 
 let pchain: PlatformVMAPI
 let pKeychain: KeyChain
@@ -45,17 +51,18 @@ let fee: BN
 let pChainBlockchainID: string
 let avaxAssetIDBuf: Buffer
 
-let xchain: AVMAPI
-let xKeychain: AVMKeyChain
-let xChainBlockchainID: string
-let xChainBlockchainIDBuf: Buffer
-let xAddresses: Buffer[]
+let cchain: EVMAPI
+let cKeychain: EVMKeyChain
+let cChainBlockchainID: string
+let cChainBlockchainIDBuf: Buffer
+let cAddresses: Buffer[]
 
 const InitAvalanche = async () => {
   await avalanche.fetchNetworkSettings()
   pchain = avalanche.PChain()
   pKeychain = pchain.keyChain()
   pKeychain.importKey(privKey)
+  pKeychain.importKey(privKey2)
   pAddresses = pchain.keyChain().getAddresses()
   pAddressStrings = pchain.keyChain().getAddressStrings()
   avaxAssetID = avalanche.getNetwork().X.avaxAssetID
@@ -63,25 +70,26 @@ const InitAvalanche = async () => {
   pChainBlockchainID = avalanche.getNetwork().P.blockchainID
   avaxAssetIDBuf = bintools.cb58Decode(avaxAssetID)
 
-  xchain = avalanche.XChain()
-  xKeychain = xchain.keyChain()
-  xKeychain.importKey(privKey)
-  xAddresses = xchain.keyChain().getAddresses()
-  xChainBlockchainID = avalanche.getNetwork().X.blockchainID
-  xChainBlockchainIDBuf = bintools.cb58Decode(xChainBlockchainID)
+  cchain = avalanche.CChain()
+  cKeychain = cchain.keyChain()
+  cKeychain.importKey(privKey)
+  cKeychain.importKey(privKey2)
+  cAddresses = cchain.keyChain().getAddresses()
+  cChainBlockchainID = avalanche.getNetwork().C.blockchainID
+  cChainBlockchainIDBuf = bintools.cb58Decode(cChainBlockchainID)
 }
 
 const main = async (): Promise<any> => {
   await InitAvalanche()
 
   const avaxAssetID: Buffer = await pchain.getAVAXAssetID()
-  const getBalanceResponse: GetBalanceResponse = (await pchain.getBalance({
-    address: pAddressStrings[0]
-  })) as GetBalanceResponseAvax
-  const unlocked: BN = getBalanceResponse.unlocked
+  const getBalanceResponse: GetBalanceResponse = (await pchain.getBalance([
+    pAddressStrings[0]
+  ])) as GetBalanceResponseAvax
+  const unlocked: BN = new BN(getBalanceResponse.unlocked)
   const secpTransferOutput: SECPTransferOutput = new SECPTransferOutput(
     unlocked.sub(fee),
-    xAddresses,
+    cAddresses,
     locktime,
     threshold
   )
@@ -94,14 +102,17 @@ const main = async (): Promise<any> => {
   const platformVMUTXOResponse: any = await pchain.getUTXOs(pAddressStrings)
   const utxoSet: UTXOSet = platformVMUTXOResponse.utxos
   const utxos: UTXO[] = utxoSet.getAllUTXOs()
-  utxos.forEach((utxo: UTXO) => {
+  utxos.forEach((utxo: UTXO): void => {
     const amountOutput: AmountOutput = utxo.getOutput() as AmountOutput
-    const amt: BN = amountOutput.getAmount().clone()
+    const amt: BN = amountOutput.getAmount()
     const txid: Buffer = utxo.getTxID()
     const outputidx: Buffer = utxo.getOutputIdx()
 
     const secpTransferInput: SECPTransferInput = new SECPTransferInput(amt)
-    secpTransferInput.addSignatureIdx(0, xAddresses[0])
+    secpTransferInput.addSignatureIdx(0, pAddresses[1])
+    if (utxo.getOutput().getThreshold() === 2) {
+      secpTransferInput.addSignatureIdx(1, pAddresses[0])
+    }
 
     const input: TransferableInput = new TransferableInput(
       txid,
@@ -118,7 +129,7 @@ const main = async (): Promise<any> => {
     outputs,
     inputs,
     memo,
-    bintools.cb58Decode(xChainBlockchainID),
+    bintools.cb58Decode(cChainBlockchainID),
     exportedOuts
   )
 

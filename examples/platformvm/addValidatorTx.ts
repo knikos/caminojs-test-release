@@ -21,6 +21,7 @@ import { BaseOutput } from "caminojs/common"
 import {
   PrivateKeyPrefix,
   DefaultLocalGenesisPrivateKey,
+  Defaults,
   NodeIDStringToBuffer,
   UnixNow
 } from "caminojs/utils"

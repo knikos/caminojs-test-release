@@ -30,10 +30,13 @@ const main = async (): Promise<any> => {
   const utxos: UTXO[] = utxoset.getAllUTXOs()
 
   utxos.map((utxo: UTXO): void => {
-    const output: BaseOutput = utxo.getOutput()
+    const output: Output = utxo.getOutput()
     const addresses: string[] = output
       .getAddresses()
-      .map((x: Buffer): string => xchain.addressFromBuffer(x))
+      .map((x: Buffer): string => {
+        const addy: string = xchain.addressFromBuffer(x)
+        return addy
+      })
     console.log(addresses)
   })
 }
