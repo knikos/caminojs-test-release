@@ -1,4 +1,4 @@
-name: CI
+name: CI/CD
 
 on:
   push:
@@ -19,6 +19,10 @@ on:
         description: "caminojs branch"
         required: true
         default: "chain4travel"
+      release:
+        description: "Publish to npm"
+        required: false
+        default: "false"
 
 env:
   CI: true
@@ -47,3 +51,14 @@ jobs:
       - run: yarn install --frozen-lockfile
       - run: yarn prettier-check
       - run: yarn test
+  Release:
+    if: ${{ github.event.inputs.release == 'true'}}
+    needs: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Publish to npm
+        run: |
+          echo "//registry.npmjs.org/:_authToken=\${{ secrets.NPM_TOKEN }}" > .npmrc
+          yarn publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
