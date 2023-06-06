@@ -3,8 +3,7 @@ name: Push to release branch
 on:
   push:
     branches:
-      - release
-      - master
+      - chain4travel
 jobs:
   release:
     name: Release
