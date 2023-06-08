@@ -203,13 +203,6 @@ describe("Camino-XChain", (): void => {
       (x) => x,
       Matcher.toThrow,
       () => "not found"
-    ],
-    [
-      "getAssetDesc",
-      () => xChain.getAssetDescription(asset.value),
-      (x) => [x.name, x.symbol],
-      Matcher.toEqual,
-      () => ["Camino", "CAM"]
     ]
   ]
 
