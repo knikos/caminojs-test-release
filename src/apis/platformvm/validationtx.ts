@@ -33,6 +33,7 @@ export abstract class ValidatorTx extends BaseTx {
   protected _typeName = "ValidatorTx"
   protected _typeID = undefined
 
+  // add comment
   serialize(encoding: SerializedEncoding = "hex"): object {
     let fields: object = super.serialize(encoding)
     return {
