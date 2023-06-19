@@ -67,7 +67,7 @@ const changelogGen = ["@semantic-release/changelog", {}]
 const releaseNotesGen = ["@semantic-release/release-notes-generator", {}]
 
 let plugins
-if (process.env && process.env.RELEASE_BRANCH === "chain4travel") {
+if (process.env && process.env.RELEASE_BRANCH === "release") {
   plugins = [
     commitAnalyzerSetting,
     githubSetting,
