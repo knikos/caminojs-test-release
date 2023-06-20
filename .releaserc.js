@@ -81,7 +81,7 @@ if (process.env && process.env.RELEASE_BRANCH === "release") {
 module.exports = {
   branches: [
     {
-      name: "chain4travel"
+      name: "release"
     }
   ],
   plugins
