@@ -82,10 +82,6 @@ module.exports = {
   branches: [
     {
       name: "release"
-    },
-    {
-      name: "chain4travel",
-      prerelease: "alpha"
     }
   ],
   plugins

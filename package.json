@@ -1,5 +1,5 @@
 {
-  "name": "@c4tplatform/caminojs",
+  "name": "@knikos/caminojs",
   "version": "1.0.0",
   "description": "Camino Platform JS Library",
   "main": "dist/index.js",
@@ -22,7 +22,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/chain4travel/caminojs.git"
+    "url": "git@github.com:knikos/caminojs-test-release.git"
   },
   "keywords": [
     "camino",
